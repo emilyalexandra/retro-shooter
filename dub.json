@@ -1,0 +1,27 @@
+{
+	"name": "retro-shooter",
+	"authors": [
+		"Emily"
+	],
+	"dependencies": {
+		"derelict-sdl2": "~>2.1.4",
+		"derelict-gl3": "~>1.0.24",
+		"imageformats": "~>7.0.2"
+	},
+	"configurations": [
+		{
+			"name": "client",
+			"targetType": "executable",
+			"versions": [
+				"Client"
+			]
+		},
+		{
+			"name": "server",
+			"targetType": "executable",
+			"versions": [
+				"Server"
+			]
+		}
+	]
+}
