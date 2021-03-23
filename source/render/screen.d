@@ -85,7 +85,12 @@ void drawScreen() {
 	glClearColor(1.0, 0.6, 0.9, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	//import std.datetime.stopwatch;
+	//StopWatch sw;
+	//sw.start();
 	drawLevel();
+	//import std.stdio: writeln;
+	//writeln(sw.peek.total!"msecs", " ms to draw level");
 
 	glBindTexture(GL_TEXTURE_2D, framebufferTexture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, INTERNAL_WIDTH, INTERNAL_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, &(framebuffer[0]));

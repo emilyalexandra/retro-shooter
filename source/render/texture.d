@@ -7,6 +7,8 @@ import std.math;
 
 import render.screen: Pixel;
 
+enum int TEXTURE_WIDTH = 32;
+
 Texture wall, bunny;
 
 void initTextures() {
@@ -21,11 +23,9 @@ struct Texture {
 		this.img = img;
 	}
 
-	Pixel sample(double u, double v) {
-		uint x = cast(uint) (u * img.w);
-		uint y = cast(uint) (v * img.h);
+	Pixel sample(int u, int v) {
 		// This assumes width is 32 to do bit magic
-		uint off = (x << 2) + (y << 7);
+		uint off = (u << 2) + (v << 7);
 		return *(cast(Pixel*) &(img.pixels[off]));
 	}
 }

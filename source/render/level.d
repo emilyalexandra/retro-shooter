@@ -5,12 +5,11 @@ import std.algorithm: min, max;
 import std.math;
 
 import render.screen;
-import render.texture: Texture;
-import textures = render.texture;
+import render.texture;
 import util.math;
 
 Square[] squares = [
-	Square(Vec3(0, 0, 1), Vec3(-1, 0, 1).normalize(), null, -1, -1, 1, 1, true),
+	Square(Vec3(0, 0, 1), Vec3(0, 0, 1).normalize(), null, -1, -1, 1, 1, true),
 	Square(Vec3(0, 0, 7.9), Vec3(0.4, 0, 1).normalize(), null, -2, -2, 2, 2, true),
 ];
 
@@ -25,8 +24,8 @@ static this(){
 			cachedProjections[x][y] = Vec3((cast(double) x / INTERNAL_WIDTH - 0.5) * 1.4, (cast(double) y / INTERNAL_WIDTH - 0.5) * 1.86, 1).normalize();
 		}
 	}
-	squares[0].texture = &textures.wall;
-	squares[1].texture = &textures.bunny;
+	squares[0].texture = &wall;
+	squares[1].texture = &bunny;
 }
 
 void drawLevel() {
@@ -53,18 +52,18 @@ void drawLevel() {
 				if ((point.x < square.plane.x) ^ (square.planeNormal.dot(proj) < 0)) {
 					horizontalMagnitude = -horizontalMagnitude;
 				}
-				double u = (square.maxX + horizontalMagnitude) / (square.maxX * 2);
-				int vert = cast(int) (INTERNAL_HEIGHT / mag); 
+				int u = cast(int) ((square.maxX + horizontalMagnitude) * TEXTURE_WIDTH / (square.maxX * 2));
+				double vert = INTERNAL_HEIGHT / mag; 
 				int minY = cast(int) (INTERNAL_HEIGHT / 2 - vert * square.maxY);
 				int maxY = cast(int) (INTERNAL_HEIGHT / 2 + vert * -square.minY);
-				double minV = 0, maxV = 1;
+				int minV = 0, maxV = TEXTURE_WIDTH;
 				int height = maxY - minY;
 				if (minY < 0) {
-					minV = cast(double) -minY / height;
+					minV = -minY * TEXTURE_WIDTH / height;
 					minY = 0;
 				}
-				if (maxY > INTERNAL_HEIGHT) {
-					maxV = 1.0 - cast(double) (maxY - INTERNAL_HEIGHT) / height;
+				if (maxY >= INTERNAL_HEIGHT) {
+					maxV = (height - (maxY - INTERNAL_HEIGHT)) * TEXTURE_WIDTH / height;
 					maxY = INTERNAL_HEIGHT;
 				}
 				strips[stripIndex++] = RenderStrip(minY, maxY, mag, u, minV, maxV, square.texture);
@@ -88,11 +87,15 @@ void drawLevel() {
 		for (int i = 0; i < stripIndex; i++) {
 			RenderStrip strip = strips[i];
 			int height = strip.max - strip.min;
-			double vMult = strip.maxV - strip.minV;
+			int vRange = strip.maxV - strip.minV;
 			for (int y = strip.min; y < strip.max; y++) {
 				if (strip.depth < depths[y]) {
 					depths[y] = strip.depth;
-					double v = strip.minV + (cast(double) (y - strip.min) / height) * vMult;
+					int v = (y - strip.min) * vRange / height + strip.minV;
+					// TODO there is a bug in the maxV generation that makes its range from 0-32 instead of 0-31, figure that out so this can go
+					if (v >= 32) {
+						v = 31;
+					}
 					setPixel(x, y, strip.texture.sample(strip.u, v));
 				}
 			}
@@ -118,7 +121,7 @@ struct Square {
 struct RenderStrip {
 	int min, max;
 	double depth;
-	double u;
-	double minV, maxV;
+	int u;
+	int minV, maxV;
 	Texture* texture;
 }
