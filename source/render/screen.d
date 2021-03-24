@@ -6,6 +6,7 @@ import derelict.sdl2.sdl;
 
 import std.conv;
 
+import input.movement;
 import render.level;
 
 enum int WIDTH = 960, HEIGHT = 720;
@@ -61,6 +62,8 @@ void initScreen() {
 
 	drawScreen();
 	SDL_ShowWindow(window);
+
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 
 void setPixel(int x, int y, Pixel p) {
@@ -75,6 +78,45 @@ bool pollScreen() {
 		} else if (e.type == SDL_WINDOWEVENT) {
 			if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
 				return true;
+			}
+		} else if (e.type == SDL_KEYDOWN) {
+			if (e.key.keysym.sym == SDLK_w) {
+				moveForward = true;
+			} else if (e.key.keysym.sym == SDLK_a) {
+				moveLeft = true;
+			} else if (e.key.keysym.sym == SDLK_s) {
+				moveBackward = true;
+			} else if (e.key.keysym.sym == SDLK_d) {
+				moveRight = true;
+			} else if (e.key.keysym.sym == SDLK_LEFT) {
+				turnLeft = true;
+			} else if (e.key.keysym.sym == SDLK_RIGHT) {
+				turnRight = true;
+			} else if (e.key.keysym.sym == SDLK_ESCAPE) {
+				SDL_SetRelativeMouseMode(SDL_FALSE);
+			}
+		} else if (e.type == SDL_KEYUP) {
+			if (e.key.keysym.sym == SDLK_w) {
+				moveForward = false;
+			} else if (e.key.keysym.sym == SDLK_a) {
+				moveLeft = false;
+			} else if (e.key.keysym.sym == SDLK_s) {
+				moveBackward = false;
+			} else if (e.key.keysym.sym == SDLK_d) {
+				moveRight = false;
+			} else if (e.key.keysym.sym == SDLK_LEFT) {
+				turnLeft = false;
+			} else if (e.key.keysym.sym == SDLK_RIGHT) {
+				turnRight = false;
+			}
+		} else if (e.type == SDL_MOUSEBUTTONDOWN) {
+			if (e.button.button == SDL_BUTTON_LEFT) {
+				SDL_SetRelativeMouseMode(SDL_TRUE);
+			}
+		} else if (e.type == SDL_MOUSEMOTION) {
+			if (SDL_GetRelativeMouseMode()) {
+				int xo = e.motion.xrel;
+				playerRotation += xo / 500.0;
 			}
 		}
 	}

@@ -9,11 +9,12 @@ import render.screen: Pixel;
 
 enum int TEXTURE_WIDTH = 32;
 
-Texture wall, bunny;
+Texture hi, bunny, wall;
 
 void initTextures() {
-	wall = Texture(read_png_from_mem(cast(const(ubyte[])) import("wall.png"), ColFmt.RGBA));
+	hi = Texture(read_png_from_mem(cast(const(ubyte[])) import("hi.png"), ColFmt.RGBA));
 	bunny = Texture(read_png_from_mem(cast(const(ubyte[])) import("bunny.png"), ColFmt.RGBA));
+	wall = Texture(read_png_from_mem(cast(const(ubyte[])) import("wall.png"), ColFmt.RGBA));
 }
 
 struct Texture {

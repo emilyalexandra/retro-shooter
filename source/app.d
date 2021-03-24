@@ -22,6 +22,8 @@ void gameLoop() {
 			if (pollScreen()) {
 				return;
 			}
+			import input.movement: tickMovement;
+			tickMovement();
 			drawScreen();
 		}
 		ticks++;
