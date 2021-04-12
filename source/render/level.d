@@ -55,7 +55,7 @@ Vec3[INTERNAL_HEIGHT][INTERNAL_WIDTH] cachedProjections;
 
 Vec3[INTERNAL_WIDTH] cachedHorizontalProjections; 
 
-static this(){
+void initLevelRenderer() {
 	for (int x = 0; x < INTERNAL_WIDTH; x++) {
 		cachedHorizontalProjections[x] = Vec3((cast(double) x / INTERNAL_WIDTH - 0.5) * 1.4, 0, 1).normalize();
 		for (int y = 0; y < INTERNAL_HEIGHT; y++) {

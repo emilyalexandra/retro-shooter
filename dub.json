@@ -4,9 +4,9 @@
 		"Emily"
 	],
 	"dependencies": {
-		"derelict-sdl2": "~>2.1.4",
-		"derelict-gl3": "~>1.0.24",
-		"imageformats": "~>7.0.2"
+		"vibe-core": "~>1.15.0",
+		"vibe-d:stream": "~>0.9.0",
+		"vibe-d:data": "~>0.9.0"
 	},
 	"configurations": [
 		{
@@ -14,14 +14,20 @@
 			"targetType": "executable",
 			"versions": [
 				"Client"
-			]
+			],
+			"dependencies": {
+				"derelict-sdl2": "~>2.1.4",
+				"derelict-gl3": "~>1.0.24",
+				"imageformats": "~>7.0.2"
+			}
 		},
 		{
 			"name": "server",
 			"targetType": "executable",
 			"versions": [
 				"Server"
-			]
+			],
+			"targetName": "retro-shooter-server"
 		}
 	]
 }

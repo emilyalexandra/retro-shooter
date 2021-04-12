@@ -5,9 +5,11 @@ import derelict.opengl3.gl3;
 import derelict.sdl2.sdl;
 
 import std.conv;
+import std.format;
 
 import input.movement;
 import render.level;
+import render.text;
 
 enum int WIDTH = 960, HEIGHT = 720;
 enum int INTERNAL_WIDTH = 320, INTERNAL_HEIGHT = 240;
@@ -23,6 +25,10 @@ GLuint framebufferTexture;
 GLuint framebufferFbo;
 
 public:
+
+shared string debugText;
+
+int fpsDisplay = 60;
 
 struct Pixel {
 	ubyte r, g, b;
@@ -59,6 +65,8 @@ void initScreen() {
 	glGenFramebuffers(1, &framebufferFbo);
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferFbo);
 	glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferTexture, 0);
+
+	initLevelRenderer();
 
 	drawScreen();
 	SDL_ShowWindow(window);
@@ -133,6 +141,8 @@ void drawScreen() {
 	drawLevel();
 	//import std.stdio: writeln;
 	//writeln(sw.peek.total!"msecs", " ms to draw level");
+	drawText("%s fps".format(fpsDisplay), 2, 2);
+	drawText(debugText, 2, 20);
 
 	glBindTexture(GL_TEXTURE_2D, framebufferTexture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, INTERNAL_WIDTH, INTERNAL_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, &(framebuffer[0]));
